@@ -149,12 +149,60 @@
             background: rgba(0, 0, 0, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
-            padding: 20px;
             min-width: 280px;
             max-width: 320px;
             max-height: 80vh;
-            overflow-y: auto;
             backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #gift-control.collapsed {
+            left: -320px;
+        }
+
+        #gift-control-content {
+            padding: 20px;
+            max-height: calc(80vh - 60px);
+            overflow-y: auto;
+        }
+
+        /* 折叠按钮 */
+        #panel-toggle {
+            pointer-events: auto;
+            position: absolute;
+            top: 50%;
+            left: 30px;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        #panel-toggle:hover {
+            background: #d4af37;
+            border-color: #d4af37;
+        }
+
+        #panel-toggle svg {
+            transition: transform 0.3s;
+            color: white;
+        }
+
+        #gift-control.collapsed~#panel-toggle svg {
+            transform: rotate(180deg);
+        }
+
+        #panel-toggle:hover svg {
+            color: white;
         }
 
         #gift-control h3 {
@@ -403,46 +451,55 @@
         </div>
 
         <!-- 礼物控制面板 -->
-        <div id="gift-control">
-            <h3>🎁 装饰圣诞树</h3>
+        <div id="gift-control" class="collapsed">
+            <div id="gift-control-content">
+                <h3>🎁 装饰圣诞树</h3>
 
-            <button class="btn-clear-all" onclick="clearAllDecorations()">🗑️ 清除所有装饰</button>
+                <button class="btn-clear-all" onclick="clearAllDecorations()">🗑️ 清除所有装饰</button>
 
-            <!-- 红色圆球 -->
-            <div class="decoration-type">
-                <h4 onclick="toggleSection(this)">
-                    <span>🔴 红色圆球</span>
-                    <span class="toggle-icon">▼</span>
-                </h4>
-                <div class="decoration-content">
-                    <div id="balls-container"></div>
-                    <button class="btn-add" onclick="addDecorationSet('ball')">+ 添加圆球组</button>
+                <!-- 红色圆球 -->
+                <div class="decoration-type">
+                    <h4 onclick="toggleSection(this)">
+                        <span>🔴 红色圆球</span>
+                        <span class="toggle-icon">▼</span>
+                    </h4>
+                    <div class="decoration-content">
+                        <div id="balls-container"></div>
+                        <button class="btn-add" onclick="addDecorationSet('ball')">+ 添加圆球组</button>
+                    </div>
+                </div>
+
+                <!-- 金色礼物盒 -->
+                <div class="decoration-type">
+                    <h4 onclick="toggleSection(this)">
+                        <span>🎁 礼物盒</span>
+                        <span class="toggle-icon">▼</span>
+                    </h4>
+                    <div class="decoration-content">
+                        <div id="boxes-container"></div>
+                        <button class="btn-add" onclick="addDecorationSet('box')">+ 添加礼物盒组</button>
+                    </div>
+                </div>
+
+                <!-- 拐杖糖果 -->
+                <div class="decoration-type">
+                    <h4 onclick="toggleSection(this)">
+                        <span>🍭 拐杖糖果</span>
+                        <span class="toggle-icon">▼</span>
+                    </h4>
+                    <div class="decoration-content">
+                        <div id="candies-container"></div>
+                        <button class="btn-add" onclick="addDecorationSet('candy')">+ 添加糖果组</button>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <!-- 金色礼物盒 -->
-            <div class="decoration-type">
-                <h4 onclick="toggleSection(this)">
-                    <span>🎁 礼物盒</span>
-                    <span class="toggle-icon">▼</span>
-                </h4>
-                <div class="decoration-content">
-                    <div id="boxes-container"></div>
-                    <button class="btn-add" onclick="addDecorationSet('box')">+ 添加礼物盒组</button>
-                </div>
-            </div>
-
-            <!-- 拐杖糖果 -->
-            <div class="decoration-type">
-                <h4 onclick="toggleSection(this)">
-                    <span>🍭 拐杖糖果</span>
-                    <span class="toggle-icon">▼</span>
-                </h4>
-                <div class="decoration-content">
-                    <div id="candies-container"></div>
-                    <button class="btn-add" onclick="addDecorationSet('candy')">+ 添加糖果组</button>
-                </div>
-            </div>
+        <!-- 面板折叠按钮 -->
+        <div id="panel-toggle" onclick="togglePanel()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
         </div>
 
         <div class="footer">
@@ -1274,6 +1331,11 @@
             red: { value: '#D41E3A', name: '红色' },
             gold: { value: '#FFD700', name: '金色' },
             white: { value: '#FFFFFF', name: '白色' }
+        };
+
+        window.togglePanel = function () {
+            const panel = document.getElementById('gift-control');
+            panel.classList.toggle('collapsed');
         };
 
         window.toggleSection = function (header) {
